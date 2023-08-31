@@ -8,19 +8,14 @@ phases:
   build:
     commands:
       - echo Build Starting on `date` 
-#     - cp ./src/main/resources/application.yml ./src/main/resources/application-${profile}.yml
-#      - chmod +x ./gradlew
-#      - ./gradlew build
+      - chmod +x ./gradlew
+      - ./gradlew build
 
   post_build:
     commands:
       - echo Build completed on `date`
       - echo $(basename ./build/libs/*.jar) 
       - pwd 
-#     - mkdir -p deploy
-#     - cp ./build/libs/*.jar ./deploy
-#     - zip -r ./kokonut_deploy.zip ./deploy
-#     - aws s3 cp --region ap-northeast-2 ./kokonut_deploy.zip s3://kokonut-server-update-20230213/upload/build_projectfile/ 
 
 artifacts:
   files:
