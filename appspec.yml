@@ -1,0 +1,21 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /root/kokonut_batch/
+
+hooks:
+
+# 애플리케이션을 시작하는 스크립트
+  AfterInstall:
+    - location: start.sh
+      timeout: 300
+      runas: root
+
+# 모든 파일과 디렉토리를 root 사용자와 root 그룹으로 설정하는 권한 설정
+permissions:
+  - object: "/"
+    pattern: "**"
+    owner: root
+    group: root
