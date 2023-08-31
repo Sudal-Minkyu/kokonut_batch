@@ -1,0 +1,46 @@
+server:
+  port: 8055
+  
+spring:
+  datasource:
+    kokonut:
+      url: jdbc:mariadb://${DOCKER_DB_HOST}:${DOCKER_DB_PORT}/${KOKONUT_DB_DBNAME}
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: ${DOCKER_DB_USERNAME}
+      password: ${DOCKER_DB_PASSWORD}
+    kokonut-user:
+      url: jdbc:mariadb://${DOCKER_DB_HOST}:${DOCKER_DB_PORT}/${KOKONUT_DB_USER}
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: ${DOCKER_DB_USERNAME}
+      password: ${DOCKER_DB_PASSWORD}
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  batch.job.names: ${job.name:NONE}
+
+  batch:
+    jdbc:
+      initialize-schema: never
+
+
+#Custom
+kokonut:
+
+  # 메일주소
+  mail:
+    host: ${KOKONUT_MAIL_HOST}
+
+  # naver cloud 관련 값
+  ncloud:
+    serviceId: ${KOKONUT_NCLOUD_SERVICEID}
+    accessKey: ${KOKONUT_NCLOUD_ACCESSKEY}
+    secretKey: ${KOKONUT_NCLOUD_SECRETKEY}
+    primaryKey: ${KOKONUT_NCLOUD_PRIMARYKEY}
+    categoryCode: ${KOKONUT_NCLOUD_CATEGORYCODE}
+
+  #bootpay
+  bootpay:
+    restKey: ${KOKONUT_BOOTPAY_REST}
+    privateKey: ${KOKONUT_BOOTPAY_PRIVATE}

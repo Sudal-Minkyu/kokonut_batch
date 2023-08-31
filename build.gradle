@@ -1,0 +1,70 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+}
+
+group = 'com.app'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+    runtimeOnly group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.0.8'
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    implementation group: 'org.json', name: 'json', version: '20230227'
+
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // querydsl 쓰기위함
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}" // querydsl 쓰기위함
+    implementation group: 'org.qlrm', name: 'qlrm', version: '3.0.4' // querydsl 내에 네이티브 쿼리를 사용하기위함
+
+    implementation 'io.github.bootpay:backend:+' // 부트페이 라이브러리
+
+}
+
+/**
+ * @author Woody
+ * Date : 2022-10-24
+ * Time :
+ * Remark : queryDSL 설정 추가
+ */
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDir querydslDir
+}
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
