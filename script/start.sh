@@ -1,25 +1,32 @@
 #!/bin/bash
+
 sudo su -
+
 cd /root/kokonut_batch/
 
 # 프로세스 종료
-# ps aux | grep java | grep -v grep | awk '{print $2}' | xargs kill -9
-ps -ef | grep java | grep -v sonarqube | grep -v grep | awk '{print $2}' | xargs kill
+PORT=8055
+echo "프로세스 종료용 포트조회 : $PORT"
 
-# 10초간 대기합니다.
-sleep 10
+PID=$(lsof -i :$PORT -t)
+
+if [ -z "$PID" ]; then
+    echo "종료할 프로세스가 없습니다. $PORT"
+else
+    echo "해당 프로세스를 종료합니다. $PORT is: $PID"
+    kill -9 $PID
+    sleep 5
+fi
 
 # 파일 삭제
-rm -rf /root/kokonut_backend/kokonut*.jar
-
 # 새로운 파일 복사
-cp /opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/kokonut*.jar /root/kokonut_batch/kokonut*.jar
+cp /opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/kokonut*.jar /root/kokonut*.jar
 
-source ~/.zshrc
+source ~/.bashrc
 
 # 새로운 프로세스 시작
 mkdir /root/kokonut_batch/logs
 
-nohup java -jar kokonut_batch-0.0.1-SNAPSHOT.jar > /root/kokonut_batch/logs/$(date +%Y-%m-%d).log 2>&1 &
+nohup java -jar -Dserver.port=8055 batch-0.0.1-SNAPSHOT.jar > /root/kokonut_batch/logs/$(date +%Y-%m-%d).log 2>&1 &
 
 exit
